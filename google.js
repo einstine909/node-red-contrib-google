@@ -92,7 +92,7 @@ module.exports = function(RED) {
     });
 
     function GoogleConnectionNode(config){
-        var auth = null;
+        var serviceauth = null;
         var oauth2Client = null;
         RED.nodes.createNode(this, config);
         this.service_key = JSON.parse(config.service_key);
@@ -100,7 +100,7 @@ module.exports = function(RED) {
 
         this.getServiceAuth = function() {
           if(!serviceauth) {
-            auth = new google.auth.JWT(
+            serviceauth = new google.auth.JWT(
                 this.service_key.client_email,
                 null,
                 this.service_key.private_key,
@@ -108,7 +108,7 @@ module.exports = function(RED) {
                 null
             );
           }
-          return auth;
+          return serviceauth;
         }
 
         this.getOAuth2Client = function(){
@@ -130,14 +130,13 @@ module.exports = function(RED) {
                         this.debug("OAuth2 refresh token changed");
                     }
 
-                  });
-
-            return oauth2Client;
+                });
             }
+            return oauth2Client;
         }
 
         this.getAPIAuth = function(){
-            return ""
+            return "";
         }
 
         this.getAuth = function(){
