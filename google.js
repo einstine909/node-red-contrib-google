@@ -109,7 +109,7 @@ module.exports = function(RED) {
             );
           }
           return auth;
-        };
+        }
 
         this.getOAuth2Client = function(){
             if(!oauth2Client){
@@ -120,7 +120,7 @@ module.exports = function(RED) {
                 );
 
                 oauth2Client.setCredentials({
-                    refresh_token: this.credentials.oauth2_refresh_token,
+                    refresh_token: this.credentials.oauth2_refresh_token
                 });
 
                 oauth2Client.on('tokens', (tokens) => {
@@ -136,7 +136,7 @@ module.exports = function(RED) {
             }
         }
 
-        this.getAPIAuth() = function(){
+        this.getAPIAuth = function(){
             return ""
         }
 
