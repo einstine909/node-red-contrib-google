@@ -6,9 +6,25 @@
                 value: "Google",
                 required: true
             },
-            key: {
-                value: "{}",
+            auth_type: {
+                value: "oauth2",
                 required: true
+            },
+            oauth2_client_id: {
+                value: "",
+                required: false
+            },
+            oauth2_client_secret: {
+                value: "",
+                required: false
+            },
+            oauth2_callback_url: {
+                value: "",
+                required: false
+            },
+            service_key: {
+                value: "{}",
+                required: false
             },
             scopes: {
                 value: "",
@@ -31,10 +47,38 @@
         <input type="text" id="node-config-input-name"/>
     </div>
     <div class="form-row">
-        <label for="node-config-input-key">
+        <label for="node-config-input-auth_type">
+            <i class="icon-bookmark"></i>
+            Authentication Method</label>
+        <select id="node-config-input-auth_type">
+            <option value="oauth2">OAuth2</option>
+            <option value="service">Service Key</option>
+            <option value="api">API Key</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-oauth2_client_id">
+            <i class="icon-bookmark"></i>
+            OAuth2 Client ID</label>
+        <input type="text" id="node-config-input-oauth2_client_id"/>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-oauth2_client_secret">
+            <i class="icon-bookmark"></i>
+            OAuth2 Client Secret</label>
+            <input type="text" id="node-config-input-oauth2_client_secret"/>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-oauth2_callback_url">
+            <i class="icon-bookmark"></i>
+            OAuth2 Callback URL</label>
+        <input type="text" id="node-config-input-oauth2_callback_url"/>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-service_key">
             <i class="fa fa-fw fa-key"></i>
-            JSON Key</label>
-        <textarea id="node-config-input-key" rows="20" style="width: 100%"></textarea>
+            JSON Service Key</label>
+        <textarea id="node-config-input-service_key" rows="20" style="width: 100%"></textarea>
     </div>
     <div class="form-row">
         <label for="node-config-input-scopes">

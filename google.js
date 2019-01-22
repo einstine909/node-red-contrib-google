@@ -73,23 +73,95 @@ module.exports = function(RED) {
         });
     });
 
-    function GoogleConnectionNode(config) {
+    RED.httpAdmin.get('google/authorizeUrl', function(req, res) {
+
+        var configNode = RED.nodes.getNode(req.params.inst);
+        
+        if(configNode){
+            res.json(configNode.getAuthorizeUrl());
+        }
+    });
+
+    RED.httpAdmin.get('google/oauth2callback', function(req, res) {
+
+        var configNode = RED.nodes.getNode(req.params.state);
+        
+        if(configNode){
+            configNode.processAuthCode(req.params.code);
+        }
+    });
+
+    function GoogleConnectionNode(config){
         var auth = null;
+        var oauth2Client = null;
         RED.nodes.createNode(this, config);
-        this.key = JSON.parse(config.key);
+        this.service_key = JSON.parse(config.service_key);
         this.scopes = config.scopes;
-        this.getAuth = function() {
-          if(!auth) {
+
+        this.getServiceAuth = function() {
+          if(!serviceauth) {
             auth = new google.auth.JWT(
-                this.key.client_email,
+                this.service_key.client_email,
                 null,
-                this.key.private_key,
+                this.service_key.private_key,
                 this.scopes.split('\n'),
                 null
             );
           }
           return auth;
         };
+
+        this.getOAuth2Client = function(){
+            if(!oauth2Client){
+                oauth2Client = new google.auth.OAuth2(
+                    config.oauth2_client_id,
+                    config.oauth2_client_secret,
+                    config.oauth2_callback_url
+                );
+
+                oauth2Client.setCredentials({
+                    refresh_token: this.credentials.oauth2_refresh_token,
+                });
+
+                oauth2Client.on('tokens', (tokens) => {
+
+                    if(tokens.refresh_token){
+                        credentials.oauth2_refresh_token = tokens.refresh_token;
+                        this.debug("OAuth2 refresh token changed");
+                    }
+
+                  });
+
+            return oauth2Client;
+            }
+        }
+
+        this.getAPIAuth() = function(){
+            return ""
+        }
+
+        this.getAuth = function(){
+            switch(this.config.auth_type){
+                case "oauth2":
+                    return this.getOAuth2Client();
+                case "service":
+                    return this.getServiceAuth();
+                case "api":
+                    return this.getAPIAuth();
+            }
+        }
+
+        this.getAuthorizeUrl = function(){
+            return this.getOAuth2Client().generateAuthUrl({
+                access_type: 'offline',
+                scope: this.scopes,
+                state: this.name
+            });
+        }
+
+        this.processAuthCode = function(authCode){
+            this.getOAuth2Client().setCredentials(await oauth2Client.getToken(code));
+        }
     }
 
     function GoogleNode(config) {
