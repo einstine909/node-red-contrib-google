@@ -136,6 +136,8 @@ module.exports = function(RED) {
 
             const tokens = oauth2Client.getToken(authCode);
 
+            this.log(JSON.stringify(tokens));
+
             this.credentials.oauth2_refresh_token = tokens.refresh_token;
 
             this.getOAuth2Client().setCredentials(tokens);
@@ -157,7 +159,6 @@ module.exports = function(RED) {
             this.log('Listening on ' + url.pathname)
             RED.httpNode.get(url.pathname, function(req, res) {
                 
-                config_node.log("Got authcode " + req.query.code);
                 config_node.processAuthCode(req.query.code);
 
                 res.send("");
