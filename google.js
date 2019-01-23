@@ -106,15 +106,6 @@ module.exports = function(RED) {
                 oauth2Client.setCredentials({
                     refresh_token: this.credentials.oauth2_refresh_token
                 });
-
-                oauth2Client.on('tokens', (tokens) => {
-
-                    if(tokens.refresh_token){
-                        credentials.oauth2_refresh_token = tokens.refresh_token;
-                        this.debug("OAuth2 refresh token changed");
-                    }
-
-                });
             }
             return oauth2Client;
         }
@@ -143,7 +134,13 @@ module.exports = function(RED) {
 
         this.processAuthCode = function(authCode){
 
-            this.getOAuth2Client().setCredentials(oauth2Client.getToken(code));
+            const {tokens} = await oauth2Client.getToken(authCode);
+
+            this.credentials.oauth2_refresh_token = tokens.refresh_token;
+
+            this.getOAuth2Client().setCredentials(tokens);
+
+            this.log("Got refresh token");
         }
 
         if(config.auth_type == 'oauth2'){
