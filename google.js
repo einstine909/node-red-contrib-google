@@ -150,16 +150,18 @@ module.exports = function(RED) {
         if(config.auth_type == 'oauth2'){
             var url = new Url(config.oauth2_callback_url);
 
+            var config_node = this;
+
             this.log('Listening on /google/authorizeUrl/' + encodeURIComponent(config.name))
             RED.httpAdmin.get('/google/authorizeUrl/' + encodeURIComponent(config.name), function(req, res) {
                 
-                res.send('<a href="' + this.getAuthorizeUrl() + '" target="_blank">OAuth2 Authorize Link</a>');
+                res.send('<a href="' + config_node.getAuthorizeUrl() + '" target="_blank">OAuth2 Authorize Link</a>');
             });
 
             this.log('Listening on ' + url.pathname)
             RED.httpNode.get(url.pathname, function(req, res) {
                 
-                this.processAuthCode(req.params.code);
+                config_node.processAuthCode(req.params.code);
 
                 res.send("");
             });
