@@ -128,7 +128,8 @@ module.exports = function(RED) {
         this.getAuthorizeUrl = function(){
             return this.getOAuth2Client().generateAuthUrl({
                 access_type: 'offline',
-                scope: this.scopes
+                scope: this.scopes,
+                approval_prompt: "force"
             });
         }
 
