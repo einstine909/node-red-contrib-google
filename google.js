@@ -16,6 +16,7 @@ module.exports = function(RED) {
 
     var google = require('googleapis');
     var discovery = google.discovery('v1');
+    var Url = require('url-parse');
 
     RED.httpAdmin.get('/google/apis', function(req, res) {
         discovery.apis.list({
@@ -80,16 +81,6 @@ module.exports = function(RED) {
         if(configNode){
             res.json(configNode.getAuthorizeUrl());
         }
-    });
-
-    RED.httpNode.get('/google/oauth2callback', function(req, res) {
-
-        var configNode = RED.nodes.getNode(req.params.state);
-        
-        if(configNode){
-            configNode.processAuthCode(req.params.code);
-        }
-        res("Here");
     });
 
     function GoogleConnectionNode(config){
@@ -162,6 +153,20 @@ module.exports = function(RED) {
         this.processAuthCode = function(authCode){
 
             this.getOAuth2Client().setCredentials(oauth2Client.getToken(code));
+        }
+
+        if(this.config.auth_type == 'oauth2'){
+            var url = new Url(this.config.oauth2_callback_url);
+
+            RED.httpNode.get(url.pathname, function(req, res) {
+
+                var configNode = RED.nodes.getNode(req.params.state);
+                
+                if(configNode){
+                    configNode.processAuthCode(req.params.code);
+                }
+                res.send("");
+            });
         }
     }
 
