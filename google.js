@@ -157,6 +157,7 @@ module.exports = function(RED) {
             this.log('Listening on ' + url.pathname)
             RED.httpNode.get(url.pathname, function(req, res) {
                 
+                this.log("Got authcode " + req.query.code);
                 config_node.processAuthCode(req.query.code);
 
                 res.send("");
