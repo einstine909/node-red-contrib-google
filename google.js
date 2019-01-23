@@ -82,13 +82,14 @@ module.exports = function(RED) {
         }
     });
 
-    RED.httpAdmin.get('google/oauth2callback', function(req, res) {
+    RED.httpNode.get('google/oauth2callback', function(req, res) {
 
         var configNode = RED.nodes.getNode(req.params.state);
         
         if(configNode){
             configNode.processAuthCode(req.params.code);
         }
+        res("Here");
     });
 
     function GoogleConnectionNode(config){
