@@ -124,7 +124,7 @@ module.exports = function(RED) {
         }
 
         this.getAuth = function(){
-            switch(this.config.auth_type){
+            switch(config.auth_type){
                 case "oauth2":
                     return this.getOAuth2Client();
                 case "service":
@@ -147,11 +147,11 @@ module.exports = function(RED) {
             this.getOAuth2Client().setCredentials(oauth2Client.getToken(code));
         }
 
-        if(this.config.auth_type == 'oauth2'){
-            var url = new Url(this.config.oauth2_callback_url);
+        if(config.auth_type == 'oauth2'){
+            var url = new Url(config.oauth2_callback_url);
 
-            this.log('Listening on /google/authorizeUrl/' + encodeURIComponent(this.config.name))
-            RED.httpAdmin.get('/google/authorizeUrl/' + encodeURIComponent(this.config.name), function(req, res) {
+            this.log('Listening on /google/authorizeUrl/' + encodeURIComponent(config.name))
+            RED.httpAdmin.get('/google/authorizeUrl/' + encodeURIComponent(config.name), function(req, res) {
                 
                 res.send('<a href="' + this.getAuthorizeUrl() + '" target="_blank">OAuth2 Authorize Link</a>');
             });
