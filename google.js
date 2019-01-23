@@ -136,7 +136,7 @@ module.exports = function(RED) {
         }
 
         this.getAPIAuth = function(){
-            return "";
+            return ""
         }
 
         this.getAuth = function(){
@@ -159,7 +159,8 @@ module.exports = function(RED) {
         }
 
         this.processAuthCode = function(authCode){
-            this.getOAuth2Client().setCredentials(await oauth2Client.getToken(code));
+
+            this.getOAuth2Client().setCredentials(oauth2Client.getToken(code));
         }
     }
 
