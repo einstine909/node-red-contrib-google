@@ -97,7 +97,7 @@ module.exports = function(RED) {
 
         this.getOAuth2Client = function(){
             if(!oauth2Client){
-                oauth2Client = new google.auth.OAuth2(
+                oauth2Client = new google.auth.OAuth2Client(
                     config.oauth2_client_id,
                     config.oauth2_client_secret,
                     config.oauth2_callback_url
