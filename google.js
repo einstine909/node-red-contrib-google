@@ -73,7 +73,7 @@ module.exports = function(RED) {
         });
     });
 
-    RED.httpAdmin.get('google/authorizeUrl', function(req, res) {
+    RED.httpAdmin.get('/google/authorizeUrl', function(req, res) {
 
         var configNode = RED.nodes.getNode(req.params.inst);
         
@@ -82,7 +82,7 @@ module.exports = function(RED) {
         }
     });
 
-    RED.httpNode.get('google/oauth2callback', function(req, res) {
+    RED.httpNode.get('/google/oauth2callback', function(req, res) {
 
         var configNode = RED.nodes.getNode(req.params.state);
         
