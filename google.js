@@ -74,14 +74,6 @@ module.exports = function(RED) {
         });
     });
 
-    RED.httpAdmin.get('/google/authorizeUrl', function(req, res) {
-
-        var configNode = RED.nodes.getNode(req.params.inst);
-        
-        if(configNode){
-            res.json(configNode.getAuthorizeUrl());
-        }
-    });
 
     function GoogleConnectionNode(config){
         var serviceauth = null;
@@ -158,13 +150,15 @@ module.exports = function(RED) {
         if(this.config.auth_type == 'oauth2'){
             var url = new Url(this.config.oauth2_callback_url);
 
-            RED.httpNode.get(url.pathname, function(req, res) {
-
-                var configNode = RED.nodes.getNode(req.params.state);
+            RED.httpAdmin.get('/google/authorizeUrl/' + encodeURIComponent(this.config.name), function(req, res) {
                 
-                if(configNode){
-                    configNode.processAuthCode(req.params.code);
-                }
+                res.send('<a href="' + this.getAuthorizeUrl() + '" target="_blank">OAuth2 Authorize Link</a>');
+            });
+
+            RED.httpNode.get(url.pathname, function(req, res) {
+                
+                this.processAuthCode(req.params.code);
+                
                 res.send("");
             });
         }
