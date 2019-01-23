@@ -157,7 +157,7 @@ module.exports = function(RED) {
             this.log('Listening on ' + url.pathname)
             RED.httpNode.get(url.pathname, function(req, res) {
                 
-                config_node.processAuthCode(req.params.code);
+                config_node.processAuthCode(req.query.code);
 
                 res.send("");
             });
