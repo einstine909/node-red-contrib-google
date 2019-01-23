@@ -137,8 +137,7 @@ module.exports = function(RED) {
         this.getAuthorizeUrl = function(){
             return this.getOAuth2Client().generateAuthUrl({
                 access_type: 'offline',
-                scope: this.scopes,
-                state: this.name
+                scope: this.scopes
             });
         }
 
@@ -246,7 +245,11 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType("google-conn", GoogleConnectionNode);
+    RED.nodes.registerType("google-conn", GoogleConnectionNode, {
+        credentials: {
+            oauth2_refresh_token: {type:"text"}
+        }
+    });
     RED.nodes.registerType("google", GoogleNode);
 
 };
