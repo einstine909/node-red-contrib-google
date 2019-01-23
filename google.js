@@ -135,7 +135,7 @@ module.exports = function(RED) {
 
         this.processAuthCode = function(authCode){
 
-            const tokens = oauth2Client.getToken(authCode);
+            const tokens = this.getOAuth2Client().getToken(authCode);
 
             this.log(JSON.stringify(tokens));
 
