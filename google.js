@@ -198,7 +198,23 @@ module.exports = function(RED) {
                 auth: auth
             });
 
-            auth.authorize(function(err, tokens) {
+            if (err) {
+                node.status({
+                    fill: 'red',
+                    shape: 'dot',
+                    text: 'error'
+                });
+                node.error(err);
+                return;
+            }
+
+            var props = node.operation.split('.');
+            var operation = api;
+            props.forEach(function(val) {
+                operation = operation[val];
+            });
+
+            operation(msg.payload, function(err, res) {
 
                 if (err) {
                     node.status({
@@ -210,34 +226,15 @@ module.exports = function(RED) {
                     return;
                 }
 
-                var props = node.operation.split('.');
-                var operation = api;
-                props.forEach(function(val) {
-                    operation = operation[val];
+                node.status({
+                    fill: 'yellow',
+                    shape: 'dot',
+                    text: 'success'
                 });
 
-                operation(msg.payload, function(err, res) {
+                msg.payload = res;
 
-                    if (err) {
-                        node.status({
-                            fill: 'red',
-                            shape: 'dot',
-                            text: 'error'
-                        });
-                        node.error(err);
-                        return;
-                    }
-
-                    node.status({
-                        fill: 'yellow',
-                        shape: 'dot',
-                        text: 'success'
-                    });
-
-                    msg.payload = res;
-
-                    node.send(msg);
-                });
+                node.send(msg);
             });
 
         });
