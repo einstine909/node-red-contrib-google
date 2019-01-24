@@ -62,10 +62,10 @@ module.exports = function(RED) {
                 }
             }
 
-            processResources(data);
+            processResources(data.data);
 
             response.operations.sort();
-            response.scopes = Object.keys(data.auth.oauth2.scopes);
+            response.scopes = Object.keys(data.data.auth.oauth2.scopes);
 
             res.json(response);
 
