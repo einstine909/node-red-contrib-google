@@ -1,7 +1,5 @@
 module.exports = function(RED) {
 
-    "use strict";
-
     function encodeAPI(name, version) {
         return name + ':' + version;
     }
