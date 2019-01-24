@@ -21,7 +21,7 @@ module.exports = function(RED) {
             fields: "items(name,version)"
         }, function(err, data) {
             var response = [];
-            data.items.forEach(function(v) {
+            data.data.items.forEach(function(v) {
                 response.push(encodeAPI(v.name, v.version));
             });
             response.sort();
