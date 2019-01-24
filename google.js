@@ -198,16 +198,6 @@ module.exports = function(RED) {
                 auth: auth
             });
 
-            if (err) {
-                node.status({
-                    fill: 'red',
-                    shape: 'dot',
-                    text: 'error'
-                });
-                node.error(err);
-                return;
-            }
-
             var props = node.operation.split('.');
             var operation = api;
             props.forEach(function(val) {
