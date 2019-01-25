@@ -162,6 +162,8 @@ module.exports = function(RED) {
 
             this.log('Got Authcode');
 
+            this.log(authCode);
+
             const tokens = this.getOAuth2Client().getToken(authCode);
 
             this.log(JSON.stringify(tokens));
