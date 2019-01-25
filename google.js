@@ -122,7 +122,7 @@ module.exports = function(RED) {
                     refresh_token: this.context().get('oauth2_refresh_token')
                 });
 
-                oauth2client.on('tokens', (tokens) => {
+                oauth2Client.on('tokens', (tokens) => {
                     if (tokens.refresh_token) {
                         this.context().set('oauth2_refresh_token', tokens.refresh_token);
                         this.log("Got new OAuth2 refresh token")   
