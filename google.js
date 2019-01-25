@@ -79,8 +79,8 @@ module.exports = function(RED) {
         }
     });
 
-    RED.httpAdmin.get('/google/oauth2callback/:node', function(req, res) {
-        var config_node = RED.nodes.getNode(req.params.node);
+    RED.httpAdmin.get('/google/oauth2callback', function(req, res) {
+        var config_node = RED.nodes.getNode(req.query.node);
 
         if(config_node){
             config_node.processAuthCode(req.query.code);
@@ -115,7 +115,7 @@ module.exports = function(RED) {
                 oauth2Client = new google.auth.OAuth2(
                     config.oauth2_client_id,
                     config.oauth2_client_secret,
-                    config.oauth2_callback_root+'/google/oauth2callback/'+encodeURIComponent(this.id)
+                    config.oauth2_callback_root+'/google/oauth2callback/'
                 );
 
                 oauth2Client.setCredentials({
@@ -151,7 +151,8 @@ module.exports = function(RED) {
             return this.getOAuth2Client().generateAuthUrl({
                 access_type: 'offline',
                 scope: this.scopes,
-                approval_prompt: "force"
+                approval_prompt: "force",
+                state: "node="+encodeURIComponent(this.id)
             });
         }
 
