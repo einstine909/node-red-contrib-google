@@ -158,13 +158,13 @@ module.exports = function(RED) {
             });
         }
 
-        this.processAuthCode = function(authCode){
+        this.processAuthCode = async function(authCode){
 
             this.log('Got Authcode');
 
             this.log(authCode);
 
-            const tokens = this.getOAuth2Client().getToken(authCode);
+            const tokens = await this.getOAuth2Client().getToken(authCode);
 
             this.log(JSON.stringify(tokens));
 
