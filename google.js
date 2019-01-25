@@ -72,6 +72,24 @@ module.exports = function(RED) {
         });
     });
 
+    RED.httpAdmin.get('/google/authorizeUrl/:node', function(req, res) {
+        var config_node = RED.nodes.getNode(req.params.node);
+
+        if(config_node){
+            res.send('<a href="' + config_node.getAuthorizeUrl() + '" target="_blank">OAuth2 Authorization Page</a>');
+        }
+    });
+
+    RED.httpAdmin.get('/google/oauth2callback/:node', function(req, res) {
+        var config_node = RED.nodes.getNode(req.params.node);
+
+        if(config_node){
+            config_node.processAuthCode(req.query.code);
+            res.send("OAuth2 Authorization Complete. This browser tab is no longer needed.");
+        }
+        
+    });
+
 
     function GoogleConnectionNode(config){
         var serviceauth = null;
@@ -98,11 +116,18 @@ module.exports = function(RED) {
                 oauth2Client = new google.auth.OAuth2(
                     config.oauth2_client_id,
                     config.oauth2_client_secret,
-                    config.oauth2_callback_url
+                    config.oauth2_callback_root+'/google/oauth2callback/'+encodeURIComponent(this.id)
                 );
 
                 oauth2Client.setCredentials({
-                    refresh_token: this.credentials.oauth2_refresh_token
+                    refresh_token: this.context.get('oauth2_refresh_token')
+                });
+
+                oauth2client.on('tokens', (tokens) => {
+                    if (tokens.refresh_token) {
+                        this.context.set('oauth2_refresh_token', tokens.refresh_token);
+                        this.log("Got new OAuth2 refresh token")   
+                    }
                 });
             }
             return oauth2Client;
@@ -135,33 +160,8 @@ module.exports = function(RED) {
 
             const tokens = this.getOAuth2Client().getToken(authCode);
 
-            this.log(JSON.stringify(tokens));
-
-            this.credentials.oauth2_refresh_token = tokens.refresh_token;
-
             this.getOAuth2Client().setCredentials(tokens);
 
-            this.log("Got refresh token");
-        }
-
-        if(config.auth_type == 'oauth2'){
-            var url = new Url(config.oauth2_callback_url);
-
-            var config_node = this;
-
-            this.log('Listening on /google/authorizeUrl/' + encodeURIComponent(config.name))
-            RED.httpAdmin.get('/google/authorizeUrl/' + encodeURIComponent(config.name), function(req, res) {
-                
-                res.send('<a href="' + config_node.getAuthorizeUrl() + '" target="_blank">OAuth2 Authorize Link</a>');
-            });
-
-            this.log('Listening on ' + url.pathname)
-            RED.httpNode.get(url.pathname, function(req, res) {
-                
-                config_node.processAuthCode(req.query.code);
-
-                res.send("");
-            });
         }
     }
 
@@ -243,11 +243,7 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType("google-conn", GoogleConnectionNode, {
-        credentials: {
-            oauth2_refresh_token: {type:"text"}
-        }
-    });
+    RED.nodes.registerType("google-conn", GoogleConnectionNode);
     RED.nodes.registerType("google", GoogleNode);
 
 };

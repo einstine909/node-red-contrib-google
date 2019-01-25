@@ -18,7 +18,7 @@
                 value: "",
                 required: false
             },
-            oauth2_callback_url: {
+            oauth2_callback_root: {
                 value: "",
                 required: false
             },
@@ -37,7 +37,7 @@
             return this.name || "Google API";
         },
         oneditprepare: function oneditprepare(){
-            $.get("google/authorizeUrl/" + encodeURIComponent(this.name), function( data ) {
+            $.get("google/authorizeUrl/" + encodeURIComponent(this.id), function( data ) {
                 $( "#oauth2_consent" ).html( data );
             });
         }
@@ -74,12 +74,12 @@
             <input type="text" id="node-config-input-oauth2_client_secret"/>
     </div>
     <div class="form-row oauth2">
-        <label for="node-config-input-oauth2_callback_url">
+        <label for="node-config-input-oauth2_callback_root">
             <i class="icon-bookmark"></i>
-            OAuth2 Callback URL</label>
-        <input type="text" id="node-config-input-oauth2_callback_url"/>
+            OAuth2 Callback Host:Port</label>
+        <input type="text" id="node-config-input-oauth2_callback_root"/>
     </div>
-    <div id="oauth2_consent" class="form-row oauth2"></div>
+    <div id="oauth2_consent" class="row oauth2"></div>
     <div class="form-row service">
         <label for="node-config-input-service_key">
             <i class="fa fa-fw fa-key"></i>
