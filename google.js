@@ -160,7 +160,13 @@ module.exports = function(RED) {
 
         this.processAuthCode = function(authCode){
 
+            this.log('Got Authcode');
+
             const tokens = this.getOAuth2Client().getToken(authCode);
+
+            this.log('Got refresh token');
+
+            this.context().set('oauth2_refresh_token', tokens.refresh_token);
 
             this.getOAuth2Client().setCredentials(tokens);
 
