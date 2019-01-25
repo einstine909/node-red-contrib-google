@@ -164,7 +164,7 @@ module.exports = function(RED) {
 
             const tokens = this.getOAuth2Client().getToken(authCode);
 
-            this.log('Got refresh token');
+            this.log(JSON.stringify(tokens));
 
             this.context().set('oauth2_refresh_token', tokens.refresh_token);
 
