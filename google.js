@@ -115,7 +115,7 @@ module.exports = function(RED) {
                 oauth2Client = new google.auth.OAuth2(
                     config.oauth2_client_id,
                     config.oauth2_client_secret,
-                    config.oauth2_callback_root+'/google/oauth2callback/'
+                    config.oauth2_callback_root+'/google/oauth2callback'
                 );
 
                 oauth2Client.setCredentials({
