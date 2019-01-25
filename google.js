@@ -79,12 +79,14 @@ module.exports = function(RED) {
         }
     });
 
-    RED.httpAdmin.get('/google/oauth2callback', function(req, res) {
+    RED.httpNode.get('/google/oauth2callback', function(req, res) {
         var config_node = RED.nodes.getNode(req.query.node);
 
         if(config_node){
             config_node.processAuthCode(req.query.code);
             res.send("OAuth2 Authorization Complete. This browser tab is no longer needed.");
+        } else {
+            return res.status(404).json(req.query.node + ' is an incorrect state');
         }
         
     });
