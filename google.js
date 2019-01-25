@@ -83,7 +83,7 @@ module.exports = function(RED) {
         var config_node = RED.nodes.getNode(req.query.state);
 
         if(config_node){
-            config_node.processAuthCode(req.query.state);
+            config_node.processAuthCode(req.query.code);
             res.send("OAuth2 Authorization Complete. This browser tab is no longer needed.");
         } else {
             return res.status(404).json(req.query.state + ' is an incorrect state');
