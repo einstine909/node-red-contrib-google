@@ -153,7 +153,6 @@ module.exports = function(RED) {
             return this.getOAuth2Client().generateAuthUrl({
                 access_type: 'offline',
                 scope: this.scopes,
-                approval_prompt: "force",
                 prompt: "consent",
                 state: encodeURIComponent(this.id)
             });
