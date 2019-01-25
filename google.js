@@ -14,6 +14,7 @@ module.exports = function(RED) {
 
     const {google} = require('googleapis');
     const discovery = google.discovery('v1');
+    const util = require('util');
 
     RED.httpAdmin.get('/google/apis', function(req, res) {
         discovery.apis.list({
@@ -125,6 +126,9 @@ module.exports = function(RED) {
                 });
 
                 oauth2Client.on('tokens', (tokens) => {
+
+                    this.log(util.inspect(tokens));
+
                     if (tokens.refresh_token) {
                         this.context().set('oauth2_refresh_token', tokens.refresh_token);
                         this.log("Got new OAuth2 refresh token")   
@@ -160,11 +164,7 @@ module.exports = function(RED) {
 
         this.processAuthCode = async function(authCode){
 
-            const tokens = await this.getOAuth2Client().getToken(authCode);
-
-            this.log(tokens.refresh_token);
-
-            this.context().set('oauth2_refresh_token', tokens.refresh_token);
+            const {tokens} = await this.getOAuth2Client().getToken(authCode);
 
             this.getOAuth2Client().setCredentials(tokens);
 
