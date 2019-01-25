@@ -156,7 +156,7 @@ module.exports = function(RED) {
         this.getAuthorizeUrl = function(){
             return this.getOAuth2Client().generateAuthUrl({
                 access_type: 'offline',
-                scope: this.scopes,
+                scope: this.scopes.split('\n'),
                 prompt: "consent",
                 state: encodeURIComponent(this.id)
             });
@@ -218,7 +218,7 @@ module.exports = function(RED) {
                         shape: 'dot',
                         text: 'error'
                     });
-                    node.error(err);
+                    node.error(err, msg);
                     return;
                 }
 
